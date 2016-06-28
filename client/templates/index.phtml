@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>OAuth2.0 Client</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+</head>
+
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">OAuth2.0 Client</a>
+        </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#authorize">Authorize</a></li>
+            <li><a data-toggle="tab" href="#credentials">Client Credentials</a></li>
+            <li><a data-toggle="tab" href="#refresh">Refresh Token</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="authorize" class="tab-pane fade in active">
+                <h3>Authorize</h3>
+                <p>Click below to initiate authorization:</p>
+                <p><a href="/authorize" class="btn btn-primary">Authorize</a></p>
+            </div>
+            <div id="credentials" class="tab-pane fade">
+                <h3>Client Credentials</h3>
+                <p>Click below to get access token with client credentials:</p>
+                <form action="/client_credentials" method="post">
+                    <label for="client_id">Client ID</label>
+                    <input type="text" name="client_id" id="client_id" value="<?php echo $settings['client_id'] ?>">
+                    <label for="client_secret">Client secret</label>
+                    <input type="text" name="client_secret" id="client_secret" value="<?php echo $settings['client_secret'] ?>"><br>
+
+                    <button type="submit" class="btn btn-primary">Get access token</button>
+                </form>
+            </div>
+            <div id="refresh" class="tab-pane fade">
+                <h3>Refresh Token</h3>
+                <p>Click below to get new access token with refresh token:</p>
+                <p><a href="/refresh_token" class="btn btn-primary">Get access token</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+</body>
+</html>
