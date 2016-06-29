@@ -19,13 +19,23 @@ $app->get('/authorize', function ($request, $response, $args) {
         // Value MUST be set to "code".
         'response_type' => 'code', // required
 
-        // The client identifier as described in Section 2.2.
+        // The authorization server issues the registered client a client
+        // identifier -- a unique string representing the registration
+        // information provided by the client.
         'client_id' => '', // required
 
-        // As described in Section 3.1.2.
+        // After completing its interaction with the resource owner, the
+        // authorization server directs the resource owner's user-agent back to
+        // the client.  The authorization server redirects the user-agent to the
+        // client's redirection endpoint previously established with the
+        // authorization server during the client registration process or when
+        // making the authorization request.
         'redirect_uri' => '', // optional
 
-        // The scope of the access request as described by Section 3.3.
+        // The authorization and token endpoints allow the client to specify the
+        // scope of the access request using the "scope" request parameter.  In
+        // turn, the authorization server uses the "scope" response parameter to
+        // inform the client of the scope of the access token issued.
         'scope' => '', // optional
 
         // An opaque value used by the client to maintain
