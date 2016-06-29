@@ -9,6 +9,34 @@ $app->get('/', function ($request, $response, $args) {
     ]);
 });
 
+$app->get('/authorize', function ($request, $response, $args) {
+
+    $settings = $this->settings;
+
+    // Render credentials view
+    return $response->withRedirect($settings['urls']['authorize'] . '?' . http_build_query([
+
+        // Value MUST be set to "code".
+        'response_type' => 'code', // required
+
+        // The client identifier as described in Section 2.2.
+        'client_id' => '', // required
+
+        // As described in Section 3.1.2.
+        'redirect_uri' => '', // optional
+
+        // The scope of the access request as described by Section 3.3.
+        'scope' => '', // optional
+
+        // An opaque value used by the client to maintain
+        // state between the request and callback.  The authorization
+        // server includes this value when redirecting the user-agent back
+        // to the client.  The parameter SHOULD be used for preventing
+        // cross-site request forgery as described in Section 10.12.
+        'state' => 'xyz', // recommended
+    ]));
+});
+
 $app->post('/client_credentials', function ($request, $response, $args) {
 
     $settings = $this->settings;
@@ -57,7 +85,7 @@ $app->get('/resource', function ($request, $response, $args) {
             ],
         ]);
         $data = json_decode((string) $res->getBody(), true);
-        
+
     } catch(\Exception $e) {
         $res = $e->getResponse();
         $error = $e->getMessage();
