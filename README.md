@@ -30,7 +30,7 @@ Run server migrations to setup the DB:
 Run the following command to run both client and server locally:
 
 ```
-$ php -S localhost:8080 -t client/public && php -S localhost:8081 -t client/public
+$ php -S localhost:8080 -t client/public && php -S localhost:8081 -t server/public
 ```
 
 

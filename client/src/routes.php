@@ -16,6 +16,8 @@ $app->post('/client_credentials', function ($request, $response, $args) {
     $error = null;
 
     try {
+
+        // Make HTTP Request
         $res = $this->get('http_client')->request('POST', $settings['urls']['token'], [
             'form_params' => [
                 'grant_type' => 'client_credentials',
@@ -24,6 +26,7 @@ $app->post('/client_credentials', function ($request, $response, $args) {
             ],
         ]);
         $data = json_decode((string) $res->getBody(), true);
+
     } catch(\Exception $e) {
         $res = $e->getResponse();
         $error = $e->getMessage();
@@ -46,12 +49,15 @@ $app->get('/resource', function ($request, $response, $args) {
     $error = null;
 
     try {
+
+        // Make HTTP Request
         $res = $this->get('http_client')->request('GET', $settings['urls']['resource'], [
             'query' => [
                 'access_token' => $accessToken,
             ],
         ]);
         $data = json_decode((string) $res->getBody(), true);
+        
     } catch(\Exception $e) {
         $res = $e->getResponse();
         $error = $e->getMessage();
