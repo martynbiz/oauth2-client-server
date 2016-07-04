@@ -12,39 +12,54 @@ $app->get('/', function ($request, $response, $args) {
 $app->get('/authorize', function ($request, $response, $args) {
 
     $settings = $this->settings;
+    $params = $request->getQueryParams();
 
-    // Render credentials view
-    return $response->withRedirect($settings['urls']['authorize'] . '?' . http_build_query([
+    // check if code has been set
+    if (isset($params['code'])) {
 
-        // Value MUST be set to "code".
-        'response_type' => 'code', // required
+        die('code set, fetch access token...');
 
-        // The authorization server issues the registered client a client
-        // identifier -- a unique string representing the registration
-        // information provided by the client.
-        'client_id' => '', // required
+    } elseif (isset($params['state']) and $params['state'] != $_SESSION['state']) {
 
-        // After completing its interaction with the resource owner, the
-        // authorization server directs the resource owner's user-agent back to
-        // the client.  The authorization server redirects the user-agent to the
-        // client's redirection endpoint previously established with the
-        // authorization server during the client registration process or when
-        // making the authorization request.
-        'redirect_uri' => '', // optional
+        throw new \Exception('Invalid state');
 
-        // The authorization and token endpoints allow the client to specify the
-        // scope of the access request using the "scope" request parameter.  In
-        // turn, the authorization server uses the "scope" response parameter to
-        // inform the client of the scope of the access token issued.
-        'scope' => '', // optional
+    } else {
 
-        // An opaque value used by the client to maintain
-        // state between the request and callback.  The authorization
-        // server includes this value when redirecting the user-agent back
-        // to the client.  The parameter SHOULD be used for preventing
-        // cross-site request forgery as described in Section 10.12.
-        'state' => 'xyz', // recommended
-    ]));
+        $state = base64_encode(openssl_random_pseudo_bytes(30));
+
+        // Render credentials view
+        return $response->withRedirect($settings['urls']['authorize'] . '?' . http_build_query([
+
+            // Value MUST be set to "code".
+            'response_type' => 'code', // required
+
+            // The authorization server issues the registered client a client
+            // identifier -- a unique string representing the registration
+            // information provided by the client.
+            'client_id' => $settings['client_id'], // required
+
+            // After completing its interaction with the resource owner, the
+            // authorization server directs the resource owner's user-agent back to
+            // the client.  The authorization server redirects the user-agent to the
+            // client's redirection endpoint previously established with the
+            // authorization server during the client registration process or when
+            // making the authorization request.
+            'redirect_uri' => $settings['urls']['authorize_redirect_uri'], // optional
+
+            // The authorization and token endpoints allow the client to specify the
+            // scope of the access request using the "scope" request parameter.  In
+            // turn, the authorization server uses the "scope" response parameter to
+            // inform the client of the scope of the access token issued.
+            'scope' => '', // optional
+
+            // An opaque value used by the client to maintain
+            // state between the request and callback.  The authorization
+            // server includes this value when redirecting the user-agent back
+            // to the client.  The parameter SHOULD be used for preventing
+            // cross-site request forgery as described in Section 10.12.
+            'state' => $state, // recommended
+        ]));
+    }
 });
 
 $app->post('/client_credentials', function ($request, $response, $args) {
