@@ -20,7 +20,7 @@ return [
         'urls' => [
             'token' => 'http://sso.jt.martyndev/oauth/token',
             'authorize' => 'http://sso.jt.martyndev/oauth/authorize',
-            'authorize_redirect_uri' => 'localhost:8080/authorize',
+            'authorize_redirect_uri' => 'http://oauth-client.martyndev/authorize',
             'resource' => 'http://api2.jt.martyndev/articles',
         ],
 
