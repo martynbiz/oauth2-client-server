@@ -93,8 +93,6 @@ $app->get('/authorize', function ($request, $response, $args) {
 $app->post('/client_credentials', function ($request, $response, $args) {
 
     $settings = $this->settings;
-    $data = null;
-    $error = null;
 
     try {
 
@@ -109,11 +107,19 @@ $app->post('/client_credentials', function ($request, $response, $args) {
         $data = json_decode((string) $res->getBody(), true);
 
     } catch(\Exception $e) {
+
         $res = $e->getResponse();
         $error = $e->getMessage();
+
+        return $this->renderer->render($response, 'error.phtml', [
+            'error' => $error,
+            'body' => (string) $res->getBody(),
+        ]);
     }
 
-    return $response->withRedirect('/token?access_token=' . $data['access_token']);
+    return $response->withRedirect('/token?' . http_build_query([
+        'access_token' => $data['access_token'],
+    ]));
 });
 
 /**
@@ -173,8 +179,6 @@ $app->get('/resource', function ($request, $response, $args) {
 
     $settings = $this->settings;
     $accessToken = $request->getParam('access_token');
-    $data = null;
-    $error = null;
 
     try {
 
@@ -184,11 +188,17 @@ $app->get('/resource', function ($request, $response, $args) {
                 'access_token' => $accessToken,
             ],
         ]);
+
         $data = json_decode((string) $res->getBody(), true);
 
     } catch(\Exception $e) {
-        $res = $e->getResponse();
+        // $res = $e->getResponse();
         $error = $e->getMessage();
+// var_dump($res); exit;
+        return $this->renderer->render($response, 'error.phtml', [
+            'error' => $error,
+            // 'body' => (string) $res->getBody(),
+        ]);
     }
 
     // Render resource view
@@ -196,6 +206,5 @@ $app->get('/resource', function ($request, $response, $args) {
         'settings' => $settings,
         'rawBody' => htmlspecialchars((string) $res->getBody()),
         'json' => htmlspecialchars(json_encode($data, JSON_PRETTY_PRINT)),
-        'error' => $error,
     ]);
 });
